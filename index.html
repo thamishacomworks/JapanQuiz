@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0c1020">
+  <title>JapanQuiz | Japanese Vocabulary & Kanji Quizzes</title>
+
+<meta
+  name="description"
+  content="ජපන් වචන සහ Kanji පහසුවෙන් පුහුණු වෙන්න. JLPT N5, N4, N3 සහ N2 quizzes, සිංහල තේරුම් සහ level-by-level challenges."
+>
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="JapanQuiz">
+
+<meta
+  property="og:title"
+  content="JapanQuiz — ජපන් වචන සහ Kanji ඉගෙනගමු!"
+>
+
+<meta
+  property="og:description"
+  content="JLPT N5 සිට N2 දක්වා ජපන් වචන සහ Kanji පුහුණු කරන්න. Quiz play කරන්න, වැරදුණු වචන නැවත ඉගෙනගන්න, levels unlock කරන්න."
+>
+
+<meta
+  property="og:url"
+  content="https://japan-quize.netlify.app/"
+>
+
+<meta name="twitter:card" content="summary">
+
+<meta
+  name="twitter:title"
+  content="JapanQuiz — Japanese Vocabulary & Kanji Practice"
+>
+
+<meta
+  name="twitter:description"
+  content="JLPT N5–N2 quizzes සමඟ ජපන් වචන සහ Kanji සිංහල තේරුම් එක්ක පුහුණු වෙන්න."
+>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./questions/hiragana-n5.js" defer></script>
+  <script src="./questions/kanji-n5.js" defer></script>
+  <script src="./questions/hiragana-n4.js" defer></script>
+  <script src="./questions/kanji-n4.js" defer></script>
+  <script src="./questions/hiragana-n3.js" defer></script>
+  <script src="./questions/kanji-n3.js" defer></script>
+  <script src="./questions/hiragana-n2.js" defer></script>
+  <script src="./questions/kanji-n2.js" defer></script>
+  <script src="./i18n.js" defer></script>
+  <script src="./app.js" defer></script>
+  <script src="./study.js" defer></script>
+  <script src="./dashboard.js" defer></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  defer>
+</script>
+
+<script src="./auth.js" defer></script>
+<script src="./scores.js" defer></script>
+</head>
+<body>
+  <header class="app-header">
+    <a href="#home" class="brand" id="home-link">
+      <span lang="ja" aria-hidden="true">学</span>
+      <span class="brand-text">
+        JapanQuiz
+        <small data-i18n="tagline">Learn. Play. Level up.</small>
+      </span>
+    </a>
+
+    <div class="header-tools">
+      <div class="lang-switch" role="group" data-i18n-aria="language">
+        <button type="button" class="lang-button" data-lang="en" data-i18n-aria="langEnglish">EN</button>
+        <button type="button" class="lang-button" data-lang="si" data-i18n-aria="langSinhala">SIN</button>
+      </div>
+
+      <button id="open-guide" type="button"
+              class="help-button"
+              data-i18n-aria="howToPlay"
+              aria-haspopup="dialog"
+              aria-controls="guide-dialog">
+        <span aria-hidden="true">ⓘ</span>
+        <span class="help-label" data-i18n="howToPlay">How to Play</span>
+      </button>
+    </div>
+
+<div class="account-controls">
+  <span id="account-name">Guest</span>
+
+  <button id="open-login" type="button"
+          class="secondary-button" data-i18n="signIn">
+    Sign In
+  </button>
+
+  <button id="sign-out" type="button"
+          class="secondary-button" data-i18n="signOut" hidden>
+    Sign Out
+  </button>
+</div>
+
+  </header>
+
+  <main>
+    <p id="app-message" role="status" aria-live="polite"></p>
+
+    <section id="home-screen" class="screen" aria-labelledby="home-title">
+      <div class="intro">
+        <p class="eyebrow" data-i18n="homeEyebrow">YOUR JAPANESE LEARNING JOURNEY</p>
+        <h1 id="home-title" data-i18n="homeTitle">Choose a JLPT level</h1>
+        <p data-i18n="homeIntro">Start with the level that matches you. Each quiz has 10 questions. Score 7 or more to unlock the next one.</p>
+      </div>
+
+      <ol class="journey-steps">
+        <li><span>1</span> <span data-i18n="step1">Pick a level</span></li>
+        <li><span>2</span> <span data-i18n="step2">Hiragana or Kanji</span></li>
+        <li><span>3</span> <span data-i18n="step3">Pass 7 of 10</span></li>
+      </ol>
+
+      <div class="exam-grid">
+        <button type="button" class="type-card" data-exam="n5">
+          <span class="type-symbol">N5</span>
+          <span class="type-name" data-i18n="n5Name">Beginner</span>
+          <span class="type-description" data-i18n="n5Desc">Basic words and everyday kanji.</span>
+          <span class="type-action" data-i18n="chooseQuiz">Choose Quiz →</span>
+        </button>
+
+        <button type="button" class="type-card" data-exam="n4">
+          <span class="type-symbol">N4</span>
+          <span class="type-name" data-i18n="n4Name">Elementary</span>
+          <span class="type-description" data-i18n="n4Desc">Build vocabulary and kanji knowledge.</span>
+          <span class="type-action" data-i18n="chooseQuiz">Choose Quiz →</span>
+        </button>
+
+        <button type="button" class="type-card" data-exam="n3">
+          <span class="type-symbol">N3</span>
+          <span class="type-name" data-i18n="n3Name">Intermediate</span>
+          <span class="type-description" data-i18n="n3Desc">Challenge yourself with harder words.</span>
+          <span class="type-action" data-i18n="chooseQuiz">Choose Quiz →</span>
+        </button>
+
+        <button type="button" class="type-card" data-exam="n2">
+          <span class="type-symbol">N2</span>
+          <span class="type-name" data-i18n="n2Name">Upper Intermediate</span>
+          <span class="type-description" data-i18n="n2Desc">Advanced vocabulary and kanji.</span>
+          <span class="type-action" data-i18n="chooseQuiz">Choose Quiz →</span>
+        </button>
+      </div>
+    </section>
+
+    <section id="type-screen" class="screen" aria-labelledby="type-title" hidden>
+      <button id="type-back" type="button" class="back-button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/><path d="M8 12h11"/></svg>
+        <span data-i18n="backLevels">JLPT Levels</span>
+      </button>
+
+      <div class="intro">
+        <p id="selected-exam-label" class="eyebrow">JLPT N5</p>
+        <h1 id="type-title" data-i18n="typeTitle">Choose Your Quiz</h1>
+        <p data-i18n="typeIntro">Hiragana asks for the Sinhala meaning. Kanji asks for the hiragana reading.</p>
+      </div>
+
+      <div class="quiz-types">
+        <button type="button" class="type-card hiragana-card" data-quiz="hiragana">
+          <span class="type-symbol" lang="ja" aria-hidden="true">あめ</span>
+          <span class="type-name" data-i18n="hiraganaQuiz">Hiragana Quiz</span>
+          <span class="type-description" data-i18n="hiraganaDesc">Match each hiragana word to its Sinhala meaning.</span>
+          <span id="hiragana-progress" class="type-progress" data-i18n="noLevels">No levels completed yet</span>
+          <span class="type-action" data-i18n="chooseLevel">Choose Level →</span>
+        </button>
+
+        <button type="button" class="type-card kanji-card" data-quiz="kanji">
+          <span class="type-symbol" lang="ja" aria-hidden="true">山</span>
+          <span class="type-name" data-i18n="kanjiQuiz">Kanji Quiz</span>
+          <span class="type-description" data-i18n="kanjiDesc">Match each kanji to its hiragana reading.</span>
+          <span id="kanji-progress" class="type-progress" data-i18n="noLevels">No levels completed yet</span>
+          <span class="type-action" data-i18n="chooseLevel">Choose Level →</span>
+        </button>
+      </div>
+
+      <p class="home-note" data-i18n="homeNote">10 questions per level. Get at least 7 correct to unlock the next level.</p>
+    </section>
+
+    <section id="levels-screen" class="screen" aria-labelledby="levels-title" hidden>
+      <button id="levels-back" type="button" class="back-button" data-i18n-aria="ariaBackQuizTypes">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/><path d="M8 12h11"/></svg>
+        <span data-i18n="backQuizTypes">Quiz Types</span>
+      </button>
+
+      <p id="levels-category" class="eyebrow"></p>
+      <h1 id="levels-title" data-i18n="levelsTitle">Choose Your Level</h1>
+      <p data-i18n="levelsIntro">Replay unlocked levels to improve your score. Locked levels open after you pass the one before them.</p>
+
+      <div class="study-tools">
+        <button id="mixed-review" type="button" class="secondary-button" data-i18n="mixedReview">Mixed Review</button>
+        <button id="practice-mistakes" type="button" class="secondary-button">Practice Mistakes</button>
+        <button id="open-favorites" type="button" class="secondary-button">Favorites</button>
+      </div>
+
+      <div class="timer-setting">
+        <label for="timer-setting" data-i18n="timerLabel">Time per question</label>
+        <select id="timer-setting">
+          <option value="0" data-i18n="timerOff">Off — no time limit</option>
+          <option value="5" data-i18n="timer5">5 seconds</option>
+          <option value="10" data-i18n="timer10">10 seconds</option>
+          <option value="15" data-i18n="timer15">15 seconds</option>
+        </select>
+      </div>
+
+      <div id="levels-grid" class="levels-grid"></div>
+    </section>
+
+    <section id="quiz-screen" class="screen" aria-labelledby="question-instruction" hidden>
+      <div class="quiz-toolbar">
+        <button id="quit-quiz" type="button" class="back-button" data-i18n-aria="ariaBackLevels">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/><path d="M8 12h11"/></svg>
+          <span data-i18n="backToLevels">Levels</span>
+        </button>
+        <span id="quiz-level-label"></span>
+      </div>
+
+      <div class="quiz-stats">
+        <span id="question-counter">Question 1 of 10</span>
+        <span id="quiz-score">Score: 0</span>
+      </div>
+
+      <p id="question-timer" class="question-timer" role="timer" data-i18n-aria="timeRemaining" hidden></p>
+
+      <progress id="quiz-progress" value="0" max="10" data-i18n-aria="questionsAnswered"></progress>
+
+      <div class="question-card">
+        <h1 id="question-instruction">Choose the correct answer</h1>
+        <p id="question-character" class="question-character" lang="ja"></p>
+        <button id="favorite-question" type="button" class="secondary-button favorite-button" aria-pressed="false">
+          ☆ Save Word
+        </button>
+        <div id="answer-options" class="answer-options" role="group" data-i18n-aria="answerChoices"></div>
+      </div>
+
+      <div id="answer-feedback" class="answer-feedback" role="status" aria-live="polite"></div>
+
+      <button id="next-question" type="button" class="primary-button" hidden>
+        Next Question →
+      </button>
+    </section>
+
+    <section id="results-screen" class="screen" aria-labelledby="results-title" hidden>
+      <div class="results-card">
+        <p id="results-icon" class="results-icon" aria-hidden="true"></p>
+        <h1 id="results-title">Level Complete</h1>
+        <p id="results-summary"></p>
+        <p id="results-points" class="results-points"></p>
+        <p id="unlock-message"></p>
+
+        <div class="results-actions">
+          <button id="next-level" type="button" class="primary-button" data-i18n="nextLevel" hidden>Next Level →</button>
+          <button id="retry-level" type="button" class="secondary-button" data-i18n="playAgain">Play Again</button>
+          <button id="results-levels" type="button" class="secondary-button" data-i18n="chooseLevelBtn">Choose Level</button>
+          <button id="results-home" type="button" class="back-button" data-i18n="home">Home</button>
+        </div>
+      </div>
+
+      <section id="scores-section" class="scores-panel" hidden>
+        <h2 data-i18n="highScores">High scores</h2>
+        <p id="scores-exam-label"></p>
+        <p id="scores-status"></p>
+        <ol id="scores-list" class="scores-list"></ol>
+      </section>
+
+      <div id="review-section" hidden>
+        <h2 data-i18n="wordsToReview">Words to Review</h2>
+        <div id="review-list" class="review-list"></div>
+      </div>
+    </section>
+
+    <section id="study-screen" class="screen" aria-labelledby="study-title" hidden>
+      <button id="study-back" type="button" class="back-button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/><path d="M8 12h11"/></svg>
+        <span data-i18n="backToLevels">Levels</span>
+      </button>
+      <p id="study-category" class="eyebrow"></p>
+      <h1 id="study-title">Word List</h1>
+      <p id="study-description"></p>
+      <div id="study-list" class="study-list"></div>
+    </section>
+  </main>
+
+  <dialog id="guide-dialog" class="play-guide" aria-labelledby="guide-title">
+    <div class="guide-header">
+      <h2 id="guide-title" data-i18n="howToPlay">How to Play</h2>
+      <button id="close-guide" type="button" class="back-button" data-i18n-aria="closeGuide">✕</button>
+    </div>
+
+    <div class="guide-content">
+      <ol>
+        <li>
+          <strong data-i18n="guideChooseLevel">Choose your JLPT level</strong>
+          <p data-i18n="guideChooseLevelBody">Select N5, N4, N3, or N2.</p>
+        </li>
+        <li>
+          <strong data-i18n="guideChooseQuiz">Choose your quiz</strong>
+          <p data-i18n="guideChooseQuizBody">Hiragana: choose the Sinhala meaning. Kanji: choose the correct hiragana reading.</p>
+        </li>
+        <li>
+          <strong data-i18n="guideLearn">Learn before you play</strong>
+          <p data-i18n="guideLearnBody">Open Word List to review an unlocked level. Save difficult words with Save Word.</p>
+        </li>
+        <li>
+          <strong data-i18n="guidePass">Pass and level up</strong>
+          <p data-i18n="guidePassBody">Answer at least 7 of 10 questions correctly to unlock the next game level.</p>
+        </li>
+        <li>
+          <strong data-i18n="guidePractice">Practice your way</strong>
+          <p data-i18n="guidePracticeBody">Try Practice Mistakes or Mixed Review. Practice modes do not unlock game levels.</p>
+        </li>
+        <li>
+          <strong data-i18n="guideTimer">Choose your timer</strong>
+          <p data-i18n="guideTimerBody">Before a quiz, pick 5, 10, or 15 seconds per question, or Off for no limit. Each question starts fresh. The timer stops when you answer so you can read the explanation. If time runs out, the question is marked incorrect.</p>
+        </li>
+      </ol>
+
+      <div class="guide-note">
+        <strong data-i18n="guideSavedTitle">Your progress stays on this device.</strong>
+        <p data-i18n="guideSavedBody">Progress, favorites, and mistakes are saved in this browser. They do not sync between devices. Clearing browser data may erase them.</p>
+      </div>
+
+      <p class="guide-disclaimer" data-i18n="guideDisclaimer">
+        An independent study tool. Not affiliated with JLPT or NAT-TEST. These practice sets do not cover the complete exam syllabus.
+      </p>
+    </div>
+  </dialog>
+
+  <dialog id="quit-dialog" aria-labelledby="quit-title" aria-describedby="quit-description">
+    <h2 id="quit-title" data-i18n="quitTitle">Leave this quiz?</h2>
+    <p id="quit-description" data-i18n="quitBody">
+      Your answers in this unfinished attempt will not be saved. Your completed levels will stay saved.
+    </p>
+    <div class="dialog-actions">
+      <button id="keep-playing" type="button" class="secondary-button" data-i18n="keepPlaying" autofocus>Keep Playing</button>
+      <button id="confirm-quit" type="button" class="danger-button" data-i18n="leaveQuiz">Leave Quiz</button>
+    </div>
+  </dialog>
+
+  <footer>
+    <p data-i18n="footer">Progress is saved in this browser on this device. Clearing browser data may erase it.</p>
+  </footer>
+  <dialog id="auth-dialog" class="auth-dialog"
+        aria-labelledby="auth-title"
+        aria-describedby="auth-description">
+
+  <div class="auth-logo" aria-hidden="true" lang="ja">
+    学
+  </div>
+
+  <h1 id="auth-title" data-i18n="authTitle">Welcome to JapanQuiz</h1>
+
+  <p id="auth-description" data-i18n="authDescription">
+    Sign in with your Google account or continue as a guest.
+  </p>
+
+  <button id="google-login" type="button"
+          class="google-login-button" data-i18n="continueGoogle">
+    Continue with Google
+  </button>
+
+  <button id="guest-login" type="button"
+          class="secondary-button" data-i18n="continueGuest">
+    Continue as Guest
+  </button>
+
+  <p id="auth-message" class="auth-message"
+     role="status" aria-live="polite"></p>
+
+  <p class="auth-note" data-i18n="authFirst">
+    First time here? Continuing with Google creates your account.
+    You do not need a separate password.
+  </p>
+
+  <p class="auth-note" data-i18n="authProgressNote">
+    Quiz progress stays in this browser.
+    Signed-in players can appear on each level's top 5.
+  </p>
+</dialog>
+</body>
+</html>
